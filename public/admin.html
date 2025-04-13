@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登录记录查看</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>登录记录</h1>
+    <table id="records">
+        <thead>
+            <tr>
+                <th>用户名</th>
+                <th>登录时间</th>
+                <th>IP地址</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        async function loadRecords() {
+            const response = await fetch('/api/login');
+            const data = await response.json();
+            const tbody = document.querySelector('#records tbody');
+            
+            data.records.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.username}</td>
+                    <td>${new Date(record.timestamp).toLocaleString()}</td>
+                    <td>${record.ip || 'N/A'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        loadRecords();
+    </script>
+</body>
+</html>
